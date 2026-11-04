@@ -5,6 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 import zipfile
+import zlib
 
 
 def stream_hash(handle):
@@ -62,7 +63,7 @@ def scan(root, max_archive_bytes=128 * 1024 * 1024):
                             entries.append({"name": member.filename, "size": member.file_size,
                                             "sha256": stream_hash(handle)})
                     add_pairs(entries, label, units, issues)
-        except (OSError, ValueError, RuntimeError, zipfile.BadZipFile) as error:
+        except (OSError, ValueError, RuntimeError, zipfile.BadZipFile, zlib.error) as error:
             issues.append({"source": label, "reason": str(error)})
     add_pairs(loose, "loose files", units, issues)
     grouped = defaultdict(list)

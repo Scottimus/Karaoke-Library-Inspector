@@ -2,6 +2,8 @@ from pathlib import Path
 import tempfile
 import unittest
 import zipfile
+from unittest.mock import patch
+import zlib
 from inspector import scan
 
 
@@ -33,6 +35,14 @@ class InspectorTests(unittest.TestCase):
             with zipfile.ZipFile(root / "large.zip", "w") as archive:
                 archive.writestr("track.mp3", b"long")
             self.assertEqual(len(scan(root, max_archive_bytes=1)["issues"]), 2)
+
+    def test_decompression_failure_does_not_abort_scan(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with zipfile.ZipFile(root / "broken-payload.zip", "w") as archive:
+                archive.writestr("track.mp3", b"payload")
+            with patch("inspector.stream_hash", side_effect=zlib.error("bad stream")):
+                self.assertEqual(len(scan(root)["issues"]), 1)
 
 
 if __name__ == "__main__":
