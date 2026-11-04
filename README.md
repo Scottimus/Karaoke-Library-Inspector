@@ -1,5 +1,7 @@
 # Karaoke Library Inspector
 
+[![Tests](https://github.com/Scottimus/Karaoke-Library-Inspector/actions/workflows/tests.yml/badge.svg)](https://github.com/Scottimus/Karaoke-Library-Inspector/actions/workflows/tests.yml)
+
 A read-only scanner for MP3/CDG pairs and ZIP collections. It groups duplicates by both payloads' SHA256 hashes and sizes, so matching audio with changed graphics remains a distinct version. File names are excluded from the content identity.
 
 ```sh
